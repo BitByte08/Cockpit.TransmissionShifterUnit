@@ -1,0 +1,37 @@
+build/
+cmake-build-*/
+out/
+mx.scratch
+
+# CMake/Ninja (when generated outside build/)
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+*.ninja
+*.ninja_deps
+*.ninja_log
+.ninja_*
+
+# Firmware outputs
+*.elf
+*.map
+*.hex
+*.bin
+*.lst
+
+# Toolchain intermediates (when generated outside build/)
+*.o
+*.obj
+*.a
+*.d
+*.su
+*.stackdump
+
+# IDE/editor noise
+.vs/
+*.code-workspace
+.DS_Store
+Thumbs.db
+
+!.settings/
