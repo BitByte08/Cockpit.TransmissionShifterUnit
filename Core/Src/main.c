@@ -109,6 +109,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+ 
   HAL_Init();
 
   /* USER CODE BEGIN Init */
@@ -336,7 +337,7 @@ static GearState_t ReadCurrentGear(void)
 {
   // Read all gear pins at once from GPIOA's Input Data Register (IDR)
   // Pins are PA0-PA6, so we are interested in the lower 7 bits.
-  const uint16_t gearPinValues = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6);
+  const uint16_t gearPinValues = (uint16_t)(GPIOA->IDR & 0x007FU);
 
   uint8_t pressedCount = 0U;
   GearState_t detected = GEAR_N;
