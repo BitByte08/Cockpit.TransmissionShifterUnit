@@ -53,7 +53,7 @@ typedef enum
   GEAR_4 = 4U,
   GEAR_5 = 5U,
   GEAR_6 = 6U,
-  GEAR_R = 7U
+  GEAR_R = 0xFFU   /* -1 as int8 */
 } GearState_t;
 
 /* USER CODE END PD */
@@ -86,7 +86,6 @@ static void MX_CAN_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 static GearState_t ReadCurrentGear(void);
-static uint8_t GetGearAscii(GearState_t gear);
 
 /* USER CODE END PFP */
 
@@ -136,7 +135,7 @@ int main(void)
   g_stableGear = ReadCurrentGear();
   g_lastRawGear = g_stableGear;
   g_lastReportedGear = g_stableGear;
-  (void)GearCan_Send(&hcan, (uint8_t)g_stableGear, GetGearAscii(g_stableGear));
+  (void)GearCan_Send(&hcan, (uint8_t)g_stableGear);
   g_lastPeriodicTxTick = HAL_GetTick();
   g_lastRawChangeTick = g_lastPeriodicTxTick;
 
@@ -172,13 +171,13 @@ int main(void)
 
     if (g_stableGear != g_lastReportedGear)
     {
-      (void)GearCan_Send(&hcan, (uint8_t)g_stableGear, GetGearAscii(g_stableGear));
+      (void)GearCan_Send(&hcan, (uint8_t)g_stableGear);
       g_lastReportedGear = g_stableGear;
     }
 
     if ((now - g_lastPeriodicTxTick) >= GEAR_TX_PERIOD_MS)
     {
-      (void)GearCan_Send(&hcan, (uint8_t)g_stableGear, GetGearAscii(g_stableGear));
+      (void)GearCan_Send(&hcan, (uint8_t)g_stableGear);
       g_lastPeriodicTxTick = now;
     }
   }
@@ -350,7 +349,7 @@ static GearState_t ReadCurrentGear(void)
     if (((gearPinValues >> i) & 1U) == GPIO_PIN_RESET)
     {
       pressedCount++;
-      detected = (GearState_t)(i + 1U);
+      detected = (i == 6U) ? GEAR_R : (GearState_t)(i + 1U);
     }
   }
 
@@ -363,22 +362,6 @@ static GearState_t ReadCurrentGear(void)
   return detected;
 }
 
-static uint8_t GetGearAscii(GearState_t gear)
-{
-  switch(gear)
-  {
-    case GEAR_1: return '1';
-    case GEAR_2: return '2';
-    case GEAR_3: return '3';
-    case GEAR_4: return '4';
-    case GEAR_5: return '5';
-    case GEAR_6: return '6';
-    case GEAR_R: return 'R';
-    case GEAR_N:
-    default:
-      return 'N';
-  }
-}
 
 /* USER CODE END 4 */
 

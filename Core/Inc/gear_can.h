@@ -8,7 +8,7 @@ extern "C" {
 #include "stm32f1xx_hal.h"
 
 HAL_StatusTypeDef GearCan_Init(CAN_HandleTypeDef *hcan);
-HAL_StatusTypeDef GearCan_Send(CAN_HandleTypeDef *hcan, uint8_t gearValue, uint8_t gearAscii);
+HAL_StatusTypeDef GearCan_Send(CAN_HandleTypeDef *hcan, uint8_t gearValue);
 
 #ifdef __cplusplus
 }

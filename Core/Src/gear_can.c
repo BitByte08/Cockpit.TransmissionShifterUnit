@@ -1,7 +1,7 @@
 #include "gear_can.h"
 
-#define GEAR_CAN_STD_ID 0x101U
-#define GEAR_CAN_DLC    2U
+#define GEAR_CAN_STD_ID 0x301U
+#define GEAR_CAN_DLC    1U
 
 static HAL_StatusTypeDef GearCan_FilterConfig_AllPass(CAN_HandleTypeDef *hcan)
 {
@@ -30,7 +30,7 @@ HAL_StatusTypeDef GearCan_Init(CAN_HandleTypeDef *hcan)
   return HAL_CAN_Start(hcan);
 }
 
-HAL_StatusTypeDef GearCan_Send(CAN_HandleTypeDef *hcan, uint8_t gearValue, uint8_t gearAscii)
+HAL_StatusTypeDef GearCan_Send(CAN_HandleTypeDef *hcan, uint8_t gearValue)
 {
   CAN_TxHeaderTypeDef txHeader = {0};
   uint8_t txData[GEAR_CAN_DLC] = {0};
@@ -44,7 +44,6 @@ HAL_StatusTypeDef GearCan_Send(CAN_HandleTypeDef *hcan, uint8_t gearValue, uint8
   txHeader.TransmitGlobalTime = DISABLE;
 
   txData[0] = gearValue;
-  txData[1] = gearAscii;
 
   return HAL_CAN_AddTxMessage(hcan, &txHeader, txData, &txMailbox);
 }
